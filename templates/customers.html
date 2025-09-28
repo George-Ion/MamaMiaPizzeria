@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Customers - Mamma Mia Pizza{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>👥 Customer Management</h1>
+    <p>Manage our wonderful customers and their loyalty status.</p>
+</div>
+
+<div class="stats-grid">
+    {% set total_customers = customers|length %}
+    {% set loyalty_customers = customers|selectattr('0.is_loyalty_eligible')|list|length %}
+    
+    <div class="stat-card">
+        <div class="stat-number">{{ total_customers }}</div>
+        <p>Total Customers</p>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number">{{ loyalty_customers }}</div>
+        <p>Loyalty Customers</p>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number">{{ "%.1f"|format((loyalty_customers / total_customers * 100) if total_customers > 0 else 0) }}%</div>
+        <p>Loyalty Rate</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>All Customers</h2>
+    {% if customers %}
+    <table>
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Total Pizzas</th>
+                <th>Loyalty Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer, user in customers %}
+            <tr>
+                <td><strong>#{{ customer.customer_id }}</strong></td>
+                <td>{{ user.full_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone or 'Not provided' }}</td>
+                <td>{{ customer.total_pizzas_ordered }}</td>
+                <td>
+                    {% if customer.is_loyalty_eligible %}
+                        <span style="color: #4CAF50; font-weight: bold;">🎉 Loyalty Customer</span>
+                    {% else %}
+                        <span style="color: #666;">{{ customer.total_pizzas_ordered }}/10 pizzas</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('users.user_detail', user_id=user.user_id) }}" class="btn" style="padding: 5px 10px;">View Profile</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No customers found.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>📊 Customer Insights</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>🍕 Pizza Lovers</h4>
+            <p>Customers with 5+ pizzas:</p>
+            <div class="stat-number">{{ customers|selectattr('0.total_pizzas_ordered', 'ge', 5)|list|length }}</div>
+        </div>
+        
+        <div class="stat-card">
+            <h4>🆕 New Customers</h4>
+            <p>Customers with 1-2 pizzas:</p>
+            <div class="stat-number">{{ customers|selectattr('0.total_pizzas_ordered', 'le', 2)|list|length }}</div>
+        </div>
+        
+        <div class="stat-card">
+            <h4>⭐ VIP Customers</h4>
+            <p>Customers with 20+ pizzas:</p>
+            <div class="stat-number">{{ customers|selectattr('0.total_pizzas_ordered', 'ge', 20)|list|length }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}Place Order - Mamma Mia Pizza{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🍕 Place New Order</h2>
+    
+    <form method="POST" action="{{ url_for('orders.create_order') }}">
+        <div class="form-group">
+            <label for="customer_id">Select Customer</label>
+            <select name="customer_id" id="customer_id" class="form-control" required>
+                <option value="">-- Select a Customer --</option>
+                {% for customer, user in customers %}
+                <option value="{{ customer.customer_id }}">
+                    {{ user.first_name }} {{ user.last_name }} 
+                    {% if customer.total_pizzas_ordered >= 10 %}(Loyalty Customer){% endif %}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="card">
+            <h3>🍕 Pizzas</h3>
+            {% for pizza in pizzas %}
+            <div class="menu-item">
+                <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
+                    <label for="pizza_{{ pizza.pizza_id }}" style="flex-grow: 1">
+                        <strong>{{ pizza.name }}</strong>
+                        {% if pizza.is_vegetarian %}<span class="vegetarian-label">Vegetarian</span>{% endif %}
+                        {% if pizza.is_vegan %}<span class="vegan-label">Vegan</span>{% endif %}
+                        <br>
+                        <small>€{{ '%.2f'|format(((pizza.base_cost * 1.4) * 1.09)) }}</small>
+                    </label>
+                    <input type="number" 
+                           name="pizza_{{ pizza.pizza_id }}" 
+                           id="pizza_{{ pizza.pizza_id }}"
+                           value="0"
+                           min="0"
+                           class="form-control"
+                           style="width: 80px">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h3>🥤 Drinks</h3>
+            {% for drink in drinks %}
+            <div class="menu-item">
+                <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
+                    <label for="drink_{{ drink.drink_id }}" style="flex-grow: 1">
+                        <strong>{{ drink.name }}</strong><br>
+                        <small>€{{ '%.2f'|format(drink.price) }}</small>
+                    </label>
+                    <input type="number" 
+                           name="drink_{{ drink.drink_id }}" 
+                           id="drink_{{ drink.drink_id }}"
+                           value="0"
+                           min="0"
+                           class="form-control"
+                           style="width: 80px">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h3>🍰 Desserts</h3>
+            {% for dessert in desserts %}
+            <div class="menu-item">
+                <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
+                    <label for="dessert_{{ dessert.dessert_id }}" style="flex-grow: 1">
+                        <strong>{{ dessert.name }}</strong><br>
+                        <small>€{{ '%.2f'|format(dessert.price) }}</small>
+                    </label>
+                    <input type="number" 
+                           name="dessert_{{ dessert.dessert_id }}" 
+                           id="dessert_{{ dessert.dessert_id }}"
+                           value="0"
+                           min="0"
+                           class="form-control"
+                           style="width: 80px">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h3>🎫 Discount Code</h3>
+            <div class="form-group">
+                <label for="discount_code">Have a discount code?</label>
+                <input type="text" 
+                       name="discount_code" 
+                       id="discount_code"
+                       class="form-control"
+                       placeholder="Enter discount code">
+            </div>
+        </div>
+
+        <button type="submit" class="btn">Place Order</button>
+    </form>
+</div>
+
+<style>
+.menu-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.menu-item:hover {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}

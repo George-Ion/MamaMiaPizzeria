@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}Add Customer - Mamma Mia Pizza{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>👤 Add New Customer</h2>
+    
+    <form method="POST" action="{{ url_for('users.create_user') }}">
+        <div class="form-group">
+            <label for="first_name">First Name *</label>
+            <input type="text" 
+                   name="first_name" 
+                   id="first_name" 
+                   class="form-control" 
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="last_name">Last Name *</label>
+            <input type="text" 
+                   name="last_name" 
+                   id="last_name" 
+                   class="form-control" 
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" 
+                   name="email" 
+                   id="email" 
+                   class="form-control" 
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" 
+                   name="phone" 
+                   id="phone" 
+                   class="form-control" 
+                   pattern="[+]?[0-9\s-]+"
+                   placeholder="+39 123 456 7890">
+        </div>
+
+        <div class="form-group">
+            <label for="date_of_birth">Date of Birth *</label>
+            <input type="date" 
+                   name="date_of_birth" 
+                   id="date_of_birth" 
+                   class="form-control" 
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea name="address" 
+                      id="address" 
+                      class="form-control" 
+                      rows="3"
+                      placeholder="Street address"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="postal_code">Postal Code</label>
+            <input type="text" 
+                   name="postal_code" 
+                   id="postal_code" 
+                   class="form-control" 
+                   pattern="[0-9]+"
+                   placeholder="20121">
+        </div>
+
+        <input type="hidden" name="user_type" value="Customer">
+
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn">Create Customer</button>
+            <a href="{{ url_for('users.show_customers') }}" class="btn" style="background: #666;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.form-control:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+</style>
+{% endblock %}

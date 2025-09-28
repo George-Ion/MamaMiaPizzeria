@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block title %}Reports - Mamma Mia Pizza{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📊 Business Reports</h2>
+    
+    <div class="reports-grid">
+        <!-- Undelivered Orders -->
+        <div class="report-card">
+            <h3>⏳ Undelivered Orders</h3>
+            {% if undelivered_orders %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Waiting Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in undelivered_orders %}
+                    <tr>
+                        <td>#{{ order.order_id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.delivery_status }}</td>
+                        <td>{{ order.waiting_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No undelivered orders! 🎉</p>
+            {% endif %}
+        </div>
+
+        <!-- Top Pizzas -->
+        <div class="report-card">
+            <h3>🏆 Top 3 Pizzas (Last 30 Days)</h3>
+            {% if top_pizzas %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Pizza</th>
+                        <th>Orders</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pizza in top_pizzas %}
+                    <tr>
+                        <td>#{{ loop.index }}</td>
+                        <td>{{ pizza.name }}</td>
+                        <td>{{ pizza.orders }}</td>
+                        <td class="price">€{{ '%.2f'|format(pizza.revenue) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No pizza orders in the last 30 days.</p>
+            {% endif %}
+        </div>
+
+        <!-- Earnings by Age Group -->
+        <div class="report-card">
+            <h3>👥 Earnings by Age Group</h3>
+            {% if age_group_earnings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Age Group</th>
+                        <th>Orders</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in age_group_earnings %}
+                    <tr>
+                        <td>{{ group.age_range }}</td>
+                        <td>{{ group.orders }}</td>
+                        <td class="price">€{{ '%.2f'|format(group.revenue) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No data available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Earnings by Postal Code -->
+        <div class="report-card">
+            <h3>📍 Earnings by Postal Code</h3>
+            {% if postal_code_earnings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Postal Code</th>
+                        <th>Orders</th>
+                        <th>Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pc in postal_code_earnings %}
+                    <tr>
+                        <td>{{ pc.postal_code }}</td>
+                        <td>{{ pc.orders }}</td>
+                        <td class="price">€{{ '%.2f'|format(pc.revenue) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No data available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.report-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.report-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #333;
+}
+.report-card table {
+    width: 100%;
+    margin-bottom: 0;
+}
+.report-card th {
+    font-size: 0.9em;
+}
+.report-card td {
+    font-size: 0.9em;
+}
+</style>
+{% endblock %}
