@@ -9,7 +9,7 @@
     <div class="reports-grid">
         <!-- Undelivered Orders -->
         <div class="report-card">
-            <h3>⏳ Undelivered Orders</h3>
+            <h3>Undelivered Orders</h3>
             {% if undelivered_orders %}
             <table>
                 <thead>
@@ -32,7 +32,7 @@
                 </tbody>
             </table>
             {% else %}
-            <p>No undelivered orders! 🎉</p>
+            <p>No undelivered orders!</p>
             {% endif %}
         </div>
 
@@ -119,6 +119,22 @@
             {% endif %}
         </div>
     </div>
+    
+    <!-- Admin Functions -->
+    <div class="card admin-section">
+        <h3>Admin Functions</h3>
+        <p>Administrative tools for managing the system:</p>
+        
+        <form method="POST" action="{{ url_for('orders.reset_discount_codes') }}" style="display: inline;">
+            <button type="submit" class="btn btn-warning" onclick="return confirm('This will reset all discount codes to unused and extend their expiry dates. Continue?')">
+                Reset All Discount Codes
+            </button>
+        </form>
+        
+        <p class="admin-note">
+            <small><strong>Note:</strong> This will reset all discount codes to unused status and extend expiry dates to 2026.</small>
+        </p>
+    </div>
 </div>
 
 <style>
@@ -148,6 +164,31 @@
 }
 .report-card td {
     font-size: 0.9em;
+}
+
+.admin-section {
+    background-color: #f8f9fa;
+    border-left: 4px solid #ffc107;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.admin-note {
+    margin-top: 1rem;
+    color: #6c757d;
+    font-style: italic;
 }
 </style>
 {% endblock %}

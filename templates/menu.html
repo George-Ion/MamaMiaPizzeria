@@ -1,73 +1,292 @@
 {% extends "layout.html" %}
 
-{% block title %}Menu - Mamma Mia Pizza{% endblock %}
+{% block title %}Menu & Order - Mamma Mia Pizza{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h2>🍕 Our Menu</h2>
+    <h2>Our Menu & Place Order</h2>
     
-    <!-- Menu Filters -->
-    <div class="filters">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="vegetarian">Vegetarian 🌱</button>
-        <button class="filter-btn" data-filter="vegan">Vegan 🌿</button>
-    </div>
+    <form method="POST" action="{{ url_for('orders.create_order') }}">
+        <!-- Customer Selection -->
+        <div class="form-group">
+            <label for="customer_id">Select Customer to Place Order</label>
+            <select name="customer_id" id="customer_id" class="form-control" required>
+                <option value="">-- Select a Customer --</option>
+                {% for customer, user in customers %}
+                <option value="{{ customer.customer_id }}">
+                    {{ user.first_name }} {{ user.last_name }} 
+                    {% if customer.total_pizzas_ordered >= 10 %}(Loyalty Customer){% endif %}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <!-- Menu Categories -->
-    <div class="menu-section">
-        <h3>Pizzas</h3>
-        <div class="menu-grid">
-            {% for pizza in pizzas %}
-            <div class="menu-item" 
-                 data-vegetarian="{{ 'true' if pizza.is_vegetarian else 'false' }}"
-                 data-vegan="{{ 'true' if pizza.is_vegan else 'false' }}">
-                <div class="menu-item-header">
-                    <h4>{{ pizza.name }}</h4>
-                    <div class="menu-item-labels">
-                        {% if pizza.is_vegetarian %}
-                        <span class="vegetarian-label">🌱 Vegetarian</span>
-                        {% endif %}
-                        {% if pizza.is_vegan %}
-                        <span class="vegan-label">🌿 Vegan</span>
-                        {% endif %}
+        <!-- Menu Categories with Ordering -->
+        <div class="menu-section">
+            <h3>Pizzas</h3>
+            
+            <!-- Pizza Filters -->
+            <div class="filters">
+                <button type="button" class="filter-btn active" data-filter="all">All Pizzas</button>
+                <button type="button" class="filter-btn" data-filter="vegetarian">Vegetarian</button>
+                <button type="button" class="filter-btn" data-filter="vegan">Vegan</button>
+            </div>
+            
+            <div class="menu-grid">
+                {% for pizza in pizzas %}
+                <div class="menu-item" 
+                     data-vegetarian="{{ 'true' if pizza.is_vegetarian else 'false' }}"
+                     data-vegan="{{ 'true' if pizza.is_vegan else 'false' }}">
+                    <div class="menu-item-header">
+                        <h4>{{ pizza.name }}</h4>
+                        <div class="menu-item-labels">
+                            {% if pizza.is_vegetarian %}
+                            <span class="vegetarian-label">Vegetarian</span>
+                            {% endif %}
+                            {% if pizza.is_vegan %}
+                            <span class="vegan-label">Vegan</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="description">{{ pizza.description }}</p>
+                    <p class="ingredients">
+                        {% for ingredient in pizza.ingredients %}
+                        <span class="ingredient">{{ ingredient.name }}</span>
+                        {% endfor %}
+                    </p>
+                    <div class="item-order">
+                        <p class="price">€{{ '%.2f'|format(pizza.final_price) }}</p>
+                        <div class="quantity-control">
+                            <label for="pizza_{{ pizza.pizza_id }}">Qty:</label>
+                            <input type="number" 
+                                   name="pizza_{{ pizza.pizza_id }}" 
+                                   id="pizza_{{ pizza.pizza_id }}"
+                                   value="0"
+                                   min="0"
+                                   class="form-control quantity-input">
+                        </div>
                     </div>
                 </div>
-                <p class="description">{{ pizza.description }}</p>
-                <p class="ingredients">
-                    {% for ingredient in pizza.ingredients %}
-                    <span class="ingredient">{{ ingredient.name }}</span>
-                    {% endfor %}
-                </p>
-                <p class="price">€{{ '%.2f'|format(pizza.final_price) }}</p>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
 
-    <div class="menu-section">
-        <h3>Drinks</h3>
-        <div class="menu-grid">
-            {% for drink in drinks %}
-            <div class="menu-item">
-                <h4>{{ drink.name }}</h4>
-                <p class="price">€{{ '%.2f'|format(drink.price) }}</p>
+        <div class="menu-section">
+            <h3>Drinks</h3>
+            <div class="menu-grid">
+                {% for drink in drinks %}
+                <div class="menu-item">
+                    <h4>{{ drink.name }}</h4>
+                    <div class="item-order">
+                        <p class="price">€{{ '%.2f'|format(drink.price) }}</p>
+                        <div class="quantity-control">
+                            <label for="drink_{{ drink.drink_id }}">Qty:</label>
+                            <input type="number" 
+                                   name="drink_{{ drink.drink_id }}" 
+                                   id="drink_{{ drink.drink_id }}"
+                                   value="0"
+                                   min="0"
+                                   class="form-control quantity-input">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
 
-    <div class="menu-section">
-        <h3>Desserts</h3>
-        <div class="menu-grid">
-            {% for dessert in desserts %}
-            <div class="menu-item">
-                <h4>{{ dessert.name }}</h4>
-                <p class="price">€{{ '%.2f'|format(dessert.price) }}</p>
+        <div class="menu-section">
+            <h3>Desserts</h3>
+            <div class="menu-grid">
+                {% for dessert in desserts %}
+                <div class="menu-item">
+                    <h4>{{ dessert.name }}</h4>
+                    <div class="item-order">
+                        <p class="price">€{{ '%.2f'|format(dessert.price) }}</p>
+                        <div class="quantity-control">
+                            <label for="dessert_{{ dessert.dessert_id }}">Qty:</label>
+                            <input type="number" 
+                                   name="dessert_{{ dessert.dessert_id }}" 
+                                   id="dessert_{{ dessert.dessert_id }}"
+                                   value="0"
+                                   min="0"
+                                   class="form-control quantity-input">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
+
+        <!-- Discount Code Section -->
+        <div class="card">
+            <h3>Discount Code</h3>
+            <div class="form-group">
+                <label for="discount_code">Have a discount code?</label>
+                <input type="text" 
+                       name="discount_code" 
+                       id="discount_code"
+                       class="form-control"
+                       placeholder="Enter discount code (e.g., WELCOME10)">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Place Order</button>
+    </form>
 </div>
+
+<style>
+.menu-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+}
+
+.menu-item:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+}
+
+.menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.menu-item-labels {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.vegetarian-label, .vegan-label {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    color: white;
+}
+
+.vegetarian-label {
+    background-color: #28a745;
+}
+
+.vegan-label {
+    background-color: #17a2b8;
+}
+
+.description {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.ingredients {
+    margin-bottom: 1rem;
+}
+
+.ingredient {
+    display: inline-block;
+    background-color: #e9ecef;
+    padding: 0.2rem 0.5rem;
+    margin: 0.1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.item-order {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin: 0;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-input {
+    width: 70px;
+    text-align: center;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #007bff;
+    background: white;
+    color: #007bff;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #e7f3ff;
+}
+
+.filter-btn.active {
+    background: #007bff;
+    color: white;
+}
 </style>
 
 <script>

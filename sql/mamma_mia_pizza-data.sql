@@ -11,7 +11,13 @@ INSERT INTO `User` (first_name, last_name, email, phone, date_of_birth, address,
 ('Francesco', 'De Luca', 'francesco.deluca@email.com', '+39 340 7890123', '1983-06-17', 'Corso Buenos Aires 88, Milano', '20124', 'Staff'),
 ('Chiara', 'Galli', 'chiara.galli@email.com', '+39 334 8901234', '1996-04-11', 'Via Torino 156, Milano', '20123', 'Customer'),
 ('Matteo', 'Ricci', 'matteo.ricci@email.com', '+39 345 9012345', '1987-10-25', 'Navigli District 22, Milano', '20144', 'Customer'),
-('Francesca', 'Greco', 'francesca.greco@email.com', '+39 329 0123456', '1975-01-12', 'Via Garibaldi 77, Milano', '20121', 'Admin');
+('Francesca', 'Greco', 'francesca.greco@email.com', '+39 329 0123456', '1975-01-12', 'Via Garibaldi 77, Milano', '20121', 'Admin'),
+-- Additional delivery staff for postal code coverage
+('Marco', 'Veloce', 'marco.veloce@email.com', '+39 350 1111111', '1989-05-20', 'Via Moscova 15, Milano', '20121', 'Staff'),
+('Luca', 'Rapido', 'luca.rapido@email.com', '+39 351 2222222', '1985-08-12', 'Porta Romana 42, Milano', '20122', 'Staff'),
+('Andrea', 'Sprint', 'andrea.sprint@email.com', '+39 352 3333333', '1991-02-18', 'Isola District 88, Milano', '20144', 'Staff'),
+-- Test customer with today's birthday for birthday discount testing
+('Mario', 'Compleanno', 'mario.birthday@email.com', '+39 333 9999999', '1990-10-03', 'Via Festa 1, Milano', '20121', 'Customer');
 
 -- 2. Customer table (7 customers from User table)
 INSERT INTO Customer (total_pizzas_ordered, user_id) VALUES
@@ -21,13 +27,18 @@ INSERT INTO Customer (total_pizzas_ordered, user_id) VALUES
 (2, 6),   -- Giulia Martini
 (15, 8),  -- Chiara Galli (eligible for 10% discount)
 (8, 9),   -- Matteo Ricci
-(1, 10);  -- Francesca Greco (admin but also customer)
+(1, 10),  -- Francesca Greco (admin but also customer)
+(0, 14);  -- Mario Compleanno (birthday customer)
 
--- 3. Staff table (3 staff from User table)
-INSERT INTO Staff (last_delivery_time, is_available, user_id) VALUES
-('2024-01-15 14:30:00', TRUE, 3),   -- Giuseppe Ferrari
-('2024-01-15 15:45:00', FALSE, 5),  -- Antonio Conti (unavailable)
-('2024-01-15 13:20:00', TRUE, 7);   -- Francesco De Luca
+-- 3. Staff table (6 delivery staff with assigned postal code coverage)
+INSERT INTO Staff (last_delivery_time, is_available, assigned_postal_code, user_id) VALUES
+('2024-01-15 14:30:00', TRUE, '20123', 3),   -- Giuseppe Ferrari covers Centro/Duomo
+('2024-01-15 15:45:00', FALSE, '20123', 5),  -- Antonio Conti covers Centro/Duomo (unavailable)
+('2024-01-15 13:20:00', TRUE, '20124', 7),   -- Francesco De Luca covers Buenos Aires
+-- Additional delivery staff for complete coverage
+(NULL, TRUE, '20121', 11),                   -- Marco Veloce covers Brera/Moscova
+('2024-01-15 16:00:00', TRUE, '20122', 12),  -- Luca Rapido covers Porta Romana
+('2024-01-15 17:30:00', TRUE, '20144', 13);  -- Andrea Sprint covers Navigli/Isola
 
 -- 4. Ingredients table (10 ingredients)
 INSERT INTO ingredients (name, cost_per_unit, category) VALUES
@@ -187,16 +198,16 @@ INSERT INTO Order_Item (order_id, item_type, pizza_id, drink_id, dessert_id, qua
 
 -- 11. Discount_Code table (10 discount codes)
 INSERT INTO Discount_Code (code_name, discount_value, is_used, expiry_date) VALUES
-('WELCOME10', 10.00, FALSE, '2024-12-31'),
-('PIZZA20', 20.00, TRUE, '2024-06-30'),
-('SUMMER15', 15.00, FALSE, '2024-08-31'),
-('STUDENT5', 5.00, FALSE, '2024-12-31'),
-('FAMIGLIA25', 25.00, FALSE, '2024-07-31'),
-('WEEKEND12', 12.00, TRUE, '2024-03-31'),
-('LOYALTY30', 30.00, FALSE, '2024-09-30'),
-('HAPPY18', 18.00, FALSE, '2024-05-31'),
-('MAMMA50', 50.00, FALSE, '2024-04-30'),
-('AMICI8', 8.00, TRUE, '2024-02-29');
+('WELCOME10', 10.00, FALSE, '2026-12-31'),
+('PIZZA20', 20.00, FALSE, '2026-06-30'),
+('SUMMER15', 15.00, FALSE, '2026-08-31'),
+('STUDENT5', 5.00, FALSE, '2026-12-31'),
+('FAMIGLIA25', 25.00, FALSE, '2026-07-31'),
+('WEEKEND12', 12.00, FALSE, '2026-03-31'),
+('LOYALTY30', 30.00, FALSE, '2026-09-30'),
+('HAPPY18', 18.00, FALSE, '2026-05-31'),
+('MAMMA50', 50.00, FALSE, '2026-04-30'),
+('AMICI8', 8.00, FALSE, '2026-02-28');
 
 -- 12. Order_Discount table (some orders with discounts applied)
 INSERT INTO Order_Discount (order_id, code_id, discount_type, discount_amount) VALUES

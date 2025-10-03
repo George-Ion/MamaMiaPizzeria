@@ -53,7 +53,7 @@
                 <td>{{ customer.total_pizzas_ordered }}</td>
                 <td>
                     {% if customer.is_loyalty_eligible %}
-                        <span style="color: #4CAF50; font-weight: bold;">🎉 Loyalty Customer</span>
+                        <span style="color: #4CAF50; font-weight: bold;">Loyalty Customer</span>
                     {% else %}
                         <span style="color: #666;">{{ customer.total_pizzas_ordered }}/10 pizzas</span>
                     {% endif %}

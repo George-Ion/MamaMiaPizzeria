@@ -5,8 +5,8 @@
 {% block content %}
 <div class="card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h2>📋 Orders</h2>
-        <a class="btn" href="{{ url_for('orders.new_order') }}">New Order</a>
+        <h2>Orders</h2>
+        <a class="btn" href="{{ url_for('products.show_menu') }}">New Order</a>
     </div>
 
     {% if orders %}
@@ -28,11 +28,11 @@
                 <td>{{ user.first_name }} {{ user.last_name }}</td>
                 <td>
                     <span class="status-{{ order.delivery_status.lower().replace(' ', '-') }}">
-                        {% if order.delivery_status == 'Pending' %}⏳ Pending
-                        {% elif order.delivery_status == 'In Progress' %}👨‍🍳 In Progress
-                        {% elif order.delivery_status == 'Out for Delivery' %}🚚 Out for Delivery
-                        {% elif order.delivery_status == 'Delivered' %}✅ Delivered
-                        {% elif order.delivery_status == 'Cancelled' %}❌ Cancelled
+                        {% if order.delivery_status == 'Pending' %}Pending
+                        {% elif order.delivery_status == 'In Progress' %}In Progress
+                        {% elif order.delivery_status == 'Out for Delivery' %}Out for Delivery
+                        {% elif order.delivery_status == 'Delivered' %}Delivered
+                        {% elif order.delivery_status == 'Cancelled' %}Cancelled
                         {% endif %}
                     </span>
                 </td>

@@ -19,7 +19,7 @@
         
         {% if customer.total_pizzas_ordered >= 10 %}
         <div class="alert alert-success">
-            🎉 This is a loyalty customer! ({{ customer.total_pizzas_ordered }} pizzas ordered)
+            This is a loyalty customer! ({{ customer.total_pizzas_ordered }} pizzas ordered)
         </div>
         {% endif %}
     </div>
@@ -30,19 +30,19 @@
         <p><strong>Status:</strong> 
             <span class="status-{{ order.delivery_status.lower().replace(' ', '-') }}">
                 {% if order.delivery_status == 'Pending' %}
-                    ⏳ Pending
+                    Pending
                 {% else %}
                     {% if order.delivery_status == 'In Progress' %}
-                        👨‍🍳 In Progress
+                        In Progress
                     {% else %}
                         {% if order.delivery_status == 'Out for Delivery' %}
-                            🚚 Out for Delivery
+                            Out for Delivery
                         {% else %}
                             {% if order.delivery_status == 'Delivered' %}
-                                ✅ Delivered
+                                Delivered
                             {% else %}
                                 {% if order.delivery_status == 'Cancelled' %}
-                                    ❌ Cancelled
+                                    Cancelled
                                 {% endif %}
                             {% endif %}
                         {% endif %}
@@ -134,19 +134,33 @@
     {% endif %}
 </div>
 
-{% if order.delivery_status in ['Pending', 'In Progress'] %}
+{% if order.delivery_status in ['Pending', 'In Progress', 'Out for Delivery'] %}
 <div class="card">
-    <h3>🚚 Order Actions</h3>
-    <p>This order needs attention!</p>
+    <h3>Order Actions</h3>
     {% if order.delivery_status == 'Pending' %}
-        <a href="#" class="btn btn-primary">Assign Driver</a>
-        <a href="#" class="btn">Start Preparation</a>
-    {% else %}
-        {% if order.delivery_status == 'In Progress' %}
-            <a href="#" class="btn btn-primary">Mark as Out for Delivery</a>
-        {% endif %}
+        <p>Order is pending - waiting for driver assignment</p>
+        <a href="{{ url_for('orders.delivery_status') }}" class="btn btn-primary">View Available Drivers</a>
+    {% elif order.delivery_status == 'In Progress' %}
+        <p>Order is being prepared</p>
+        <form method="POST" action="#" style="display: inline;">
+            <button type="submit" class="btn btn-primary">Mark as Out for Delivery</button>
+        </form>
+    {% elif order.delivery_status == 'Out for Delivery' %}
+        <p>Order is out for delivery</p>
+        <form method="POST" action="{{ url_for('orders.complete_delivery', order_id=order.order_id) }}" style="display: inline;">
+            <button type="submit" class="btn btn-success" onclick="return confirm('Mark this delivery as completed?')">
+                Complete Delivery
+            </button>
+        </form>
     {% endif %}
-    <a href="#" class="btn btn-danger">Cancel Order</a>
+    
+    {% if order.delivery_status != 'Cancelled' %}
+        <form method="POST" action="#" style="display: inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this order?')">
+                Cancel Order
+            </button>
+        </form>
+    {% endif %}
 </div>
 {% endif %}
 

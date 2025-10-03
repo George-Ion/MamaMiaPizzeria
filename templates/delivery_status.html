@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}Delivery Status - Mamma Mia Pizza{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Delivery Staff Status</h2>
+    
+    {% if staff_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>Driver</th>
+                <th>Phone</th>
+                <th>Assigned Area</th>
+                <th>Status</th>
+                <th>Last Delivery</th>
+                <th>Availability</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff in staff_list %}
+            <tr>
+                <td>{{ staff.staff_name }}</td>
+                <td>{{ staff.phone }}</td>
+                <td>
+                    <span class="postal-code">{{ staff.assigned_postal_code }}</span>
+                </td>
+                <td>
+                    {% if staff.is_available %}
+                        <span class="status-available">Available</span>
+                    {% else %}
+                        <span class="status-unavailable">🚫 Unavailable</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if staff.last_delivery_time %}
+                        {{ staff.last_delivery_time.strftime('%Y-%m-%d %H:%M') if staff.last_delivery_time else 'Never' }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="availability-status">{{ staff.availability_status }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No delivery staff found.</p>
+    {% endif %}
+    
+    <div style="margin-top: 2rem;">
+        <h3>📋 Delivery Rules:</h3>
+        <ul>
+            <li>🕐 Drivers are unavailable for 30 minutes after completing a delivery</li>
+            <li>📮 Orders are assigned based on customer postal code</li>
+            <li>🎯 Each driver is assigned to a specific postal code area</li>
+            <li>🔄 System automatically finds available drivers for each area</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.postal-code {
+    background: #e3f2fd;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.status-available {
+    background: #c8e6c9;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #2e7d32;
+}
+
+.status-unavailable {
+    background: #ffcdd2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #c62828;
+}
+
+.availability-status {
+    font-style: italic;
+    color: #666;
+}
+</style>
+{% endblock %}
