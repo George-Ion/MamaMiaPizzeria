@@ -2,8 +2,8 @@
 
 -- 1. User table (10 records - mix of customers, staff, admin)
 INSERT INTO `User` (first_name, last_name, email, phone, date_of_birth, address, postal_code, user_type) VALUES
-('Marco', 'Rossi', 'marco.rossi@email.com', '+39 331 1234567', '1985-03-15', 'Via Roma 123, Milano', '20121', 'Customer'),
-('Sofia', 'Bianchi', 'sofia.bianchi@email.com', '+39 347 2345678', '1992-07-22', 'Corso Venezia 45, Milano', '20122', 'Customer'),
+('Marco', 'Rossi', 'marco.rossi@email.com', '+39 331 1234567', '1985-10-20', 'Via Roma 123, Milano', '20121', 'Customer'),
+('Sofia', 'Bianchi', 'sofia.bianchi@email.com', '+39 347 2345678', '1992-10-21', 'Corso Venezia 45, Milano', '20122', 'Customer'),
 ('Giuseppe', 'Ferrari', 'giuseppe.ferrari@email.com', '+39 339 3456789', '1978-11-08', 'Piazza Duomo 8, Milano', '20123', 'Staff'),
 ('Elena', 'Romano', 'elena.romano@email.com', '+39 338 4567890', '1995-09-14', 'Via Montenapoleone 67, Milano', '20121', 'Customer'),
 ('Antonio', 'Conti', 'antonio.conti@email.com', '+39 349 5678901', '1988-02-28', 'Viale Papiniano 12, Milano', '20123', 'Staff'),
@@ -144,18 +144,18 @@ INSERT INTO drinks (name, price) VALUES
 ('Birra Nastro Azzurro 33cl', 3.80),
 ('Vino Chianti Classico (bicchiere)', 4.50),
 ('Spremuta Arancia Fresca', 3.20),
-('Caffè Espresso', 1.50),
+('Caffe Espresso', 1.50),
 ('Limoncello', 3.80),
 ('Aranciata San Pellegrino 33cl', 2.80);
 
 -- 8. Desserts table (10 Italian desserts)
 INSERT INTO desserts (name, price) VALUES
-('Tiramisù della Casa', 5.50),
+('Tiramisu della Casa', 5.50),
 ('Panna Cotta ai Frutti di Bosco', 4.80),
-('Cannoli Siciliani (2 pezzi)', 5.20),
-('Gelato Artigianale (3 gusti)', 4.50),
+('Cannoli Siciliani', 5.20),
+('Gelato Artigianale', 4.50),
 ('Torta della Nonna', 4.20),
-('Affogato al Caffè', 3.80),
+('Affogato al Caffe', 3.80),
 ('Millefoglie alla Crema', 5.80),
 ('Sorbetto al Limone', 3.50),
 ('Biscotti della Fortuna', 2.80),

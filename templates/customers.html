@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="card">
-    <h1>👥 Customer Management</h1>
+    <h1> Customer Management</h1>
     <p>Manage our wonderful customers and their loyalty status.</p>
 </div>
 
@@ -71,22 +71,22 @@
 </div>
 
 <div class="card">
-    <h3>📊 Customer Insights</h3>
+    <h3> Customer Insights</h3>
     <div class="stats-grid">
         <div class="stat-card">
-            <h4>🍕 Pizza Lovers</h4>
+            <h4> Pizza Lovers</h4>
             <p>Customers with 5+ pizzas:</p>
             <div class="stat-number">{{ customers|selectattr('0.total_pizzas_ordered', 'ge', 5)|list|length }}</div>
         </div>
         
         <div class="stat-card">
-            <h4>🆕 New Customers</h4>
+            <h4> New Customers</h4>
             <p>Customers with 1-2 pizzas:</p>
             <div class="stat-number">{{ customers|selectattr('0.total_pizzas_ordered', 'le', 2)|list|length }}</div>
         </div>
         
         <div class="stat-card">
-            <h4>⭐ VIP Customers</h4>
+            <h4> VIP Customers</h4>
             <p>Customers with 20+ pizzas:</p>
             <div class="stat-number">{{ customers|selectattr('0.total_pizzas_ordered', 'ge', 20)|list|length }}</div>
         </div>

@@ -4,13 +4,13 @@
 
 {% block content %}
 <div class="card">
-    <h1>📋 Order #{{ order.order_id }} Details</h1>
-    <a href="{{ url_for('orders.show_orders') }}" class="btn">← Back to Orders</a>
+    <h1>Order #{{ order.order_id }} Details</h1>
+    <a href="{{ url_for('orders.show_orders') }}" class="btn">Back to Orders</a>
 </div>
 
 <div class="stats-grid">
     <div class="card">
-        <h3>👤 Customer Information</h3>
+        <h3> Customer Information</h3>
         <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Phone:</strong> {{ user.phone or 'Not provided' }}</p>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="card">
-        <h3>📦 Order Information</h3>
+        <h3> Order Information</h3>
         <p><strong>Order Date:</strong> {{ order.created_at.strftime('%Y-%m-%d at %H:%M') }}</p>
         <p><strong>Status:</strong> 
             <span class="status-{{ order.delivery_status.lower().replace(' ', '-') }}">
@@ -63,7 +63,7 @@
 </div>
 
 <div class="card">
-    <h2>🛒 Order Items</h2>
+    <h2> Order Items</h2>
     {% if items %}
     <table>
         <thead>
@@ -82,8 +82,8 @@
                     <strong>
                         {% if item.item_type == 'Pizza' and item.pizza_info %}
                             {{ item.pizza_info.name }}
-                            {% if item.pizza_info.is_vegetarian %}🌱{% endif %}
-                            {% if item.pizza_info.is_vegan %}🌿{% endif %}
+                            {% if item.pizza_info.is_vegetarian %}{% endif %}
+                            {% if item.pizza_info.is_vegan %}{% endif %}
                         {% endif %}
                         {% if item.item_type == 'Drink' and item.drink_info %}
                             {{ item.drink_info.name }}
@@ -95,11 +95,11 @@
                 </td>
                 <td>
                     {% if item.item_type == 'Pizza' %}
-                        🍕 Pizza
+                         Pizza
                     {% elif item.item_type == 'Drink' %}
-                        🥤 Drink
+                         Drink
                     {% elif item.item_type == 'Dessert' %}
-                        🍰 Dessert
+                         Dessert
                     {% endif %}
                 </td>
                 <td>{{ item.quantity }}</td>
@@ -121,7 +121,7 @@
     </table>
     
     <div class="order-items">
-        <h4>💰 Order Summary</h4>
+        <h4> Order Summary</h4>
         {% set subtotal = items|sum(attribute='total_price') %}
         <p><strong>Subtotal:</strong> €{{ "%.2f"|format(subtotal) }}</p>
         <p><strong>Discount:</strong> -€{{ "%.2f"|format(order.discount_amount or 0) }}</p>

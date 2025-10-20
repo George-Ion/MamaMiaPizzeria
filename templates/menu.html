@@ -15,7 +15,6 @@
                 {% for customer, user in customers %}
                 <option value="{{ customer.customer_id }}">
                     {{ user.first_name }} {{ user.last_name }} 
-                    {% if customer.total_pizzas_ordered >= 10 %}(Loyalty Customer){% endif %}
                 </option>
                 {% endfor %}
             </select>
@@ -28,22 +27,22 @@
             <!-- Pizza Filters -->
             <div class="filters">
                 <button type="button" class="filter-btn active" data-filter="all">All Pizzas</button>
-                <button type="button" class="filter-btn" data-filter="vegetarian">Vegetarian</button>
-                <button type="button" class="filter-btn" data-filter="vegan">Vegan</button>
+                <button type="button" class="filter-btn" data-filter="vegetarian">Vegetarian Pizzas</button>
+                <button type="button" class="filter-btn" data-filter="vegan">Vegan Pizzas</button>
             </div>
             
             <div class="menu-grid">
                 {% for pizza in pizzas %}
-                <div class="menu-item" 
-                     data-vegetarian="{{ 'true' if pizza.is_vegetarian else 'false' }}"
-                     data-vegan="{{ 'true' if pizza.is_vegan else 'false' }}">
+                <div class="menu-item pizza-item" 
+                     data-vegetarian="{{ 'true' if pizza.is_vegetarian() else 'false' }}"
+                     data-vegan="{{ 'true' if pizza.is_vegan() else 'false' }}">
                     <div class="menu-item-header">
                         <h4>{{ pizza.name }}</h4>
                         <div class="menu-item-labels">
-                            {% if pizza.is_vegetarian %}
+                            {% if pizza.is_vegetarian() %}
                             <span class="vegetarian-label">Vegetarian</span>
                             {% endif %}
-                            {% if pizza.is_vegan %}
+                            {% if pizza.is_vegan() %}
                             <span class="vegan-label">Vegan</span>
                             {% endif %}
                         </div>
@@ -292,7 +291,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const menuItems = document.querySelectorAll('.menu-item');
+    const pizzaItems = document.querySelectorAll('.pizza-item'); // Only target pizza items
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -302,7 +301,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const filter = btn.dataset.filter;
 
-            menuItems.forEach(item => {
+            // Only filter pizza items, drinks and desserts stay visible
+            pizzaItems.forEach(item => {
                 if (filter === 'all') {
                     item.style.display = 'block';
                 } else if (filter === 'vegetarian') {

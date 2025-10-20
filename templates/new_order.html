@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="card">
-    <h2>🍕 Place New Order</h2>
+    <h2> Place New Order</h2>
     
     <form method="POST" action="{{ url_for('orders.create_order') }}">
         <div class="form-group">
@@ -14,14 +14,13 @@
                 {% for customer, user in customers %}
                 <option value="{{ customer.customer_id }}">
                     {{ user.first_name }} {{ user.last_name }} 
-                    {% if customer.total_pizzas_ordered >= 10 %}(Loyalty Customer){% endif %}
                 </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="card">
-            <h3>🍕 Pizzas</h3>
+            <h3> Pizzas</h3>
             {% for pizza in pizzas %}
             <div class="menu-item">
                 <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
@@ -45,7 +44,7 @@
         </div>
 
         <div class="card">
-            <h3>🥤 Drinks</h3>
+            <h3> Drinks</h3>
             {% for drink in drinks %}
             <div class="menu-item">
                 <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
@@ -66,7 +65,7 @@
         </div>
 
         <div class="card">
-            <h3>🍰 Desserts</h3>
+            <h3> Desserts</h3>
             {% for dessert in desserts %}
             <div class="menu-item">
                 <div class="form-group" style="display: flex; align-items: center; gap: 1rem;">
@@ -87,7 +86,7 @@
         </div>
 
         <div class="card">
-            <h3>🎫 Discount Code</h3>
+            <h3> Discount Code</h3>
             <div class="form-group">
                 <label for="discount_code">Have a discount code?</label>
                 <input type="text" 
