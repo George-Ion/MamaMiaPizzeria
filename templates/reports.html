@@ -120,21 +120,7 @@
         </div>
     </div>
     
-    <!-- Admin Functions -->
-    <div class="card admin-section">
-        <h3>Admin Functions</h3>
-        <p>Administrative tools for managing the system:</p>
-        
-        <form method="POST" action="{{ url_for('orders.reset_discount_codes') }}" style="display: inline;">
-            <button type="submit" class="btn btn-warning" onclick="return confirm('This will reset all discount codes to unused and extend their expiry dates. Continue?')">
-                Reset All Discount Codes
-            </button>
-        </form>
-        
-        <p class="admin-note">
-            <small><strong>Note:</strong> This will reset all discount codes to unused status and extend expiry dates to 2026.</small>
-        </p>
-    </div>
+    
 </div>
 
 <style>

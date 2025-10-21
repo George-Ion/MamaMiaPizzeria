@@ -4,65 +4,181 @@
 
 {% block content %}
 <div class="card">
-    <h2>Delivery Staff Status</h2>
+    <h2>Delivery Management Dashboard</h2>
     
-    {% if staff_list %}
-    <table>
-        <thead>
-            <tr>
-                <th>Driver</th>
-                <th>Phone</th>
-                <th>Assigned Area</th>
-                <th>Status</th>
-                <th>Last Delivery</th>
-                <th>Availability</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for staff in staff_list %}
-            <tr>
-                <td>{{ staff.staff_name }}</td>
-                <td>{{ staff.phone }}</td>
-                <td>
-                    <span class="postal-code">{{ staff.assigned_postal_code }}</span>
-                </td>
-                <td>
-                    {% if staff.is_available %}
-                        <span class="status-available">Available</span>
-                    {% else %}
-                        <span class="status-unavailable"> Unavailable</span>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if staff.last_delivery_time %}
-                        {{ staff.last_delivery_time.strftime('%Y-%m-%d %H:%M') if staff.last_delivery_time else 'Never' }}
-                    {% else %}
-                        Never
-                    {% endif %}
-                </td>
-                <td>
-                    <span class="availability-status">{{ staff.availability_status }}</span>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>No delivery staff found.</p>
+    <!-- Delivery Overview -->
+    {% if delivery_overview %}
+    <div class="delivery-overview">
+        <h3>Current Delivery Status</h3>
+        <div class="stats-grid">
+            <div class="stat-card pending">
+                <div class="stat-number">{{ delivery_overview.pending }}</div>
+                <div class="stat-label">Pending Orders</div>
+            </div>
+            <div class="stat-card in-progress">
+                <div class="stat-number">{{ delivery_overview.in_progress }}</div>
+                <div class="stat-label">In Progress (0-5 min)</div>
+            </div>
+            <div class="stat-card out-for-delivery">
+                <div class="stat-number">{{ delivery_overview.out_for_delivery }}</div>
+                <div class="stat-label">Out for Delivery (5-30 min)</div>
+            </div>
+        </div>
+    </div>
     {% endif %}
-    
-    <div style="margin-top: 2rem;">
-        <h3>Delivery Rules:</h3>
-        <ul>
-            <li> Drivers are unavailable for 30 minutes after completing a delivery</li>
-            <li> Orders are assigned based on customer postal code</li>
-            <li> Each driver is assigned to a specific postal code area</li>
-            <li> System automatically finds available drivers for each area</li>
-        </ul>
+
+    <!-- Driver Status Table -->
+    <div class="drivers-section">
+        <h3>Driver Status & Current Assignments</h3>
+        
+        {% if staff_list %}
+        <table class="driver-table">
+            <thead>
+                <tr>
+                    <th>Driver</th>
+                    <th>Assigned Area</th>
+                    <th>Availability</th>
+                    <th>Current Order</th>
+                    <th>Order Progress</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for staff in staff_list %}
+                <tr class="driver-row {{ 'available' if staff.is_available else 'busy' }}">
+                    <td>
+                        <div class="driver-info">
+                            <strong>{{ staff.staff_name }}</strong>
+                            <div class="phone">{{ staff.phone }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="postal-code">{{ staff.assigned_postal_code }}</span>
+                    </td>
+                    <td>
+                        <div class="availability-info">
+                            {% if staff.is_available %}
+                                <span class="status-available">Available</span>
+                            {% else %}
+                                <span class="status-unavailable">Busy</span>
+                            {% endif %}
+                            <div class="availability-detail">{{ staff.availability_status }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if staff.current_order %}
+                            <div class="current-order">
+                                <strong>Order #{{ staff.current_order.order_id }}</strong>
+                                <div class="customer-info">{{ staff.current_order.customer_name }}</div>
+                                <div class="address">{{ staff.current_order.customer_address }}</div>
+                            </div>
+                        {% else %}
+                            <span class="no-order">No active order</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if staff.current_order %}
+                            <div class="order-progress">
+                                <div class="status-badge status-{{ staff.current_order.delivery_status.lower().replace(' ', '-') }}">
+                                    {{ staff.current_order.delivery_status }}
+                                </div>
+                                <div class="time-info">{{ staff.current_order.time_elapsed }} min elapsed</div>
+                                <div class="next-status">{{ staff.current_order.expected_next_status }}</div>
+                            </div>
+                        {% else %}
+                            <span class="no-progress">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No delivery staff found.</p>
+        {% endif %}
     </div>
 </div>
 
 <style>
+.delivery-overview {
+    margin-bottom: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-card.pending {
+    background: linear-gradient(135deg, #fff3e0, #ffcc02);
+    color: #e65100;
+}
+
+.stat-card.in-progress {
+    background: linear-gradient(135deg, #e3f2fd, #2196f3);
+    color: #0d47a1;
+}
+
+.stat-card.out-for-delivery {
+    background: linear-gradient(135deg, #f3e5f5, #9c27b0);
+    color: #4a148c;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.drivers-section {
+    margin: 2rem 0;
+}
+
+.driver-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.driver-table th,
+.driver-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.driver-table th {
+    background: #f5f5f5;
+    font-weight: bold;
+}
+
+.driver-row.available {
+    background: #f8fff8;
+}
+
+.driver-row.busy {
+    background: #fff8f8;
+}
+
+.driver-info .phone {
+    color: #666;
+    font-size: 0.9rem;
+}
+
 .postal-code {
     background: #e3f2fd;
     padding: 4px 8px;
@@ -76,6 +192,7 @@
     padding: 4px 8px;
     border-radius: 4px;
     color: #2e7d32;
+    font-weight: bold;
 }
 
 .status-unavailable {
@@ -83,11 +200,155 @@
     padding: 4px 8px;
     border-radius: 4px;
     color: #c62828;
+    font-weight: bold;
 }
 
-.availability-status {
-    font-style: italic;
+.availability-detail {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.current-order {
+    background: #f0f7ff;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border-left: 3px solid #2196f3;
+}
+
+.current-order .customer-info {
+    font-size: 0.9rem;
     color: #666;
 }
+
+.current-order .address {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.no-order, .no-progress {
+    color: #999;
+    font-style: italic;
+}
+
+.order-progress {
+    text-align: center;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.status-pending {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.status-in-progress {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+
+.status-out-for-delivery {
+    background: #f3e5f5;
+    color: #4a148c;
+}
+
+.status-delivered {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+.time-info {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.next-status {
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+}
+
+.delivery-process {
+    margin-top: 2rem;
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.step-number {
+    background: #2196f3;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step-content strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.step-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Auto-refresh indicator */
+.auto-refresh {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #4caf50;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
 </style>
+
+<script>
+// Auto-refresh the page every 30 seconds to update delivery statuses
+setTimeout(function() {
+    location.reload();
+}, 30000);
+
+// Add auto-refresh indicator
+document.addEventListener('DOMContentLoaded', function() {
+    const indicator = document.createElement('div');
+    indicator.className = 'auto-refresh';
+    indicator.textContent = 'Auto-refresh every 30s';
+    document.body.appendChild(indicator);
+});
+</script>
 {% endblock %}

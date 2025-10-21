@@ -1,23 +1,23 @@
 -- Sample Data for Mamma Mia Pizza Database
 
--- 1. User table (10 records - mix of customers, staff, admin)
-INSERT INTO `User` (first_name, last_name, email, phone, date_of_birth, address, postal_code, user_type) VALUES
-('Marco', 'Rossi', 'marco.rossi@email.com', '+39 331 1234567', '1985-10-20', 'Via Roma 123, Milano', '20121', 'Customer'),
-('Sofia', 'Bianchi', 'sofia.bianchi@email.com', '+39 347 2345678', '1992-10-21', 'Corso Venezia 45, Milano', '20122', 'Customer'),
-('Giuseppe', 'Ferrari', 'giuseppe.ferrari@email.com', '+39 339 3456789', '1978-11-08', 'Piazza Duomo 8, Milano', '20123', 'Staff'),
-('Elena', 'Romano', 'elena.romano@email.com', '+39 338 4567890', '1995-09-14', 'Via Montenapoleone 67, Milano', '20121', 'Customer'),
-('Antonio', 'Conti', 'antonio.conti@email.com', '+39 349 5678901', '1988-02-28', 'Viale Papiniano 12, Milano', '20123', 'Staff'),
-('Giulia', 'Martini', 'giulia.martini@email.com', '+39 333 6789012', '1990-12-03', 'Via Brera 33, Milano', '20121', 'Customer'),
-('Francesco', 'De Luca', 'francesco.deluca@email.com', '+39 340 7890123', '1983-06-17', 'Corso Buenos Aires 88, Milano', '20124', 'Staff'),
-('Chiara', 'Galli', 'chiara.galli@email.com', '+39 334 8901234', '1996-04-11', 'Via Torino 156, Milano', '20123', 'Customer'),
-('Matteo', 'Ricci', 'matteo.ricci@email.com', '+39 345 9012345', '1987-10-25', 'Navigli District 22, Milano', '20144', 'Customer'),
-('Francesca', 'Greco', 'francesca.greco@email.com', '+39 329 0123456', '1975-01-12', 'Via Garibaldi 77, Milano', '20121', 'Admin'),
+-- 1. User table (14 records - mix of customers, staff, admin with gender data)
+INSERT INTO `User` (first_name, last_name, gender, email, phone, date_of_birth, address, postal_code, user_type) VALUES
+('Marco', 'Rossi', 'Male', 'marco.rossi@email.com', '+39 331 1234567', '1985-10-20', 'Via Roma 123, Milano', '20121', 'Customer'),
+('Sofia', 'Bianchi', 'Female', 'sofia.bianchi@email.com', '+39 347 2345678', '1992-10-21', 'Corso Venezia 45, Milano', '20122', 'Customer'),
+('Giuseppe', 'Ferrari', 'Male', 'giuseppe.ferrari@email.com', '+39 339 3456789', '1978-11-08', 'Piazza Duomo 8, Milano', '20123', 'Staff'),
+('Elena', 'Romano', 'Female', 'elena.romano@email.com', '+39 338 4567890', '1995-09-14', 'Via Montenapoleone 67, Milano', '20121', 'Customer'),
+('Antonio', 'Conti', 'Male', 'antonio.conti@email.com', '+39 349 5678901', '1988-02-28', 'Viale Papiniano 12, Milano', '20123', 'Staff'),
+('Giulia', 'Martini', 'Female', 'giulia.martini@email.com', '+39 333 6789012', '1990-12-03', 'Via Brera 33, Milano', '20121', 'Customer'),
+('Francesco', 'De Luca', 'Male', 'francesco.deluca@email.com', '+39 340 7890123', '1983-06-17', 'Corso Buenos Aires 88, Milano', '20124', 'Staff'),
+('Chiara', 'Galli', 'Female', 'chiara.galli@email.com', '+39 334 8901234', '1996-04-11', 'Via Torino 156, Milano', '20123', 'Customer'),
+('Matteo', 'Ricci', 'Male', 'matteo.ricci@email.com', '+39 345 9012345', '1987-10-25', 'Navigli District 22, Milano', '20144', 'Customer'),
+('Francesca', 'Greco', 'Female', 'francesca.greco@email.com', '+39 329 0123456', '1975-01-12', 'Via Garibaldi 77, Milano', '20121', 'Admin'),
 -- Additional delivery staff for postal code coverage
-('Marco', 'Veloce', 'marco.veloce@email.com', '+39 350 1111111', '1989-05-20', 'Via Moscova 15, Milano', '20121', 'Staff'),
-('Luca', 'Rapido', 'luca.rapido@email.com', '+39 351 2222222', '1985-08-12', 'Porta Romana 42, Milano', '20122', 'Staff'),
-('Andrea', 'Sprint', 'andrea.sprint@email.com', '+39 352 3333333', '1991-02-18', 'Isola District 88, Milano', '20144', 'Staff'),
+('Marco', 'Veloce', 'Male', 'marco.veloce@email.com', '+39 350 1111111', '1989-05-20', 'Via Moscova 15, Milano', '20121', 'Staff'),
+('Luca', 'Rapido', 'Male', 'luca.rapido@email.com', '+39 351 2222222', '1985-08-12', 'Porta Romana 42, Milano', '20122', 'Staff'),
+('Andrea', 'Sprint', 'Other', 'andrea.sprint@email.com', '+39 352 3333333', '1991-02-18', 'Isola District 88, Milano', '20144', 'Staff'),
 -- Test customer with today's birthday for birthday discount testing
-('Mario', 'Compleanno', 'mario.birthday@email.com', '+39 333 9999999', '1990-10-03', 'Via Festa 1, Milano', '20121', 'Customer');
+('Mario', 'Compleanno', 'Male', 'mario.birthday@email.com', '+39 333 9999999', '1990-10-03', 'Via Festa 1, Milano', '20121', 'Customer');
 
 -- 2. Customer table (7 customers from User table)
 INSERT INTO Customer (total_pizzas_ordered, user_id) VALUES
@@ -33,7 +33,7 @@ INSERT INTO Customer (total_pizzas_ordered, user_id) VALUES
 -- 3. Staff table (6 delivery staff with assigned postal code coverage)
 INSERT INTO Staff (last_delivery_time, is_available, assigned_postal_code, user_id) VALUES
 ('2024-01-15 14:30:00', TRUE, '20123', 3),   -- Giuseppe Ferrari covers Centro/Duomo
-('2024-01-15 15:45:00', FALSE, '20123', 5),  -- Antonio Conti covers Centro/Duomo (unavailable)
+('2024-01-15 15:45:00', TRUE, '20123', 5),  -- Antonio Conti covers Centro/Duomo (unavailable)
 ('2024-01-15 13:20:00', TRUE, '20124', 7),   -- Francesco De Luca covers Buenos Aires
 -- Additional delivery staff for complete coverage
 (NULL, TRUE, '20121', 11),                   -- Marco Veloce covers Brera/Moscova
@@ -165,14 +165,14 @@ INSERT INTO desserts (name, price) VALUES
 INSERT INTO Orders (customer_id, staff_id, delivery_status, created_at, discount_amount, final_total) VALUES
 (1, 1, 'Delivered', '2024-01-10 19:30:00', 0.00, 28.50),
 (2, 2, 'Delivered', '2024-01-12 20:15:00', 0.00, 31.20),
-(3, 1, 'Out for Delivery', '2024-01-15 18:45:00', 2.80, 25.00),
-(4, 3, 'Pending', '2024-01-15 19:20:00', 0.00, 22.40),
-(5, 1, 'In Progress', '2024-01-15 19:45:00', 1.50, 13.20),
+(3, 1, 'Delivered', '2024-01-15 18:45:00', 2.80, 25.00),
+(4, 3, 'Delivered', '2024-01-15 19:20:00', 0.00, 22.40),
+(5, 1, 'Delivered', '2024-01-15 19:45:00', 1.50, 13.20),
 (2, 2, 'Delivered', '2024-01-14 20:30:00', 0.00, 35.80),
 (6, 3, 'Delivered', '2024-01-13 18:20:00', 0.00, 27.90),
 (1, 1, 'Cancelled', '2024-01-11 21:00:00', 0.00, 0.00),
 (4, 2, 'Delivered', '2024-01-09 19:15:00', 0.00, 33.60),
-(3, 3, 'Pending', '2024-01-15 20:10:00', 3.20, 28.80);
+(3, 3, 'Cancelled', '2024-01-15 20:10:00', 3.20, 28.80);
 
 -- 10. Order_Item table (items for the orders)
 INSERT INTO Order_Item (order_id, item_type, pizza_id, drink_id, dessert_id, quantity, total_price) VALUES
